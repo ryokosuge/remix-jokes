@@ -1,4 +1,4 @@
-import { LiveReload } from "remix";
+import { LiveReload, Outlet } from "remix";
 
 export const App = () => {
   return (
@@ -8,11 +8,12 @@ export const App = () => {
         <title>Remix: So great, it's funny!</title>
       </head>
       <body>
-        Hello world
+        <Outlet />
         {process.env.NODE_ENV === "development" ? (
           <LiveReload />
         ) : null}
       </body>
+
     </html>
   );
 }
