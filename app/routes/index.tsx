@@ -1,7 +1,7 @@
 const IndexRoute = () => {
-	return (
-		<div>Hello Index Rotue</div>
-	);
+  return (
+    <div>Hello Index Rotue</div>
+  );
 }
 
 export default IndexRoute;

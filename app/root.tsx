@@ -13,7 +13,6 @@ export const App = () => {
           <LiveReload />
         ) : null}
       </body>
-
     </html>
   );
 }
