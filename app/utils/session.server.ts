@@ -7,6 +7,15 @@ type LoginForm = {
   password: string;
 };
 
+export const register = async ({ username, password }: LoginForm) => {
+  const passwordHash = await bcrypt.hash(password, 10);
+  return db.user.create({
+    data: {
+      username, passwordHash
+    }
+  })
+}
+
 export const login = async ({ username, password }: LoginForm) => {
   const user = await db.user.findUnique({
     where: { username }
@@ -24,6 +33,15 @@ export const login = async ({ username, password }: LoginForm) => {
   }
 
   return user;
+}
+
+export const logout = async (request: Request) => {
+  const session = await storage.getSession(request.headers.get("Cookie"));
+  return redirect("/login", {
+    headers: {
+      "Set-Cookie": await storage.destroySession(session),
+    }
+  });
 }
 
 const sessionSecret = process.env.SESSION_SECRET;
@@ -54,6 +72,20 @@ export const getUserId = async (request: Request) => {
     return null;
   }
   return userId;
+}
+
+export const getUser = async (request: Request) => {
+  const userId = await getUserId(request);
+  if (typeof userId !== "string") {
+    return null;
+  }
+
+  try {
+    const user = await db.user.findUnique({ where: { id: userId } });
+    return user;
+  } catch {
+    throw logout(request);
+  }
 }
 
 export const requiredUserId = async (request: Request, redirectTo: string = new URL(request.url).pathname) => {
