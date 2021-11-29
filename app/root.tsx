@@ -1,5 +1,5 @@
 import React from "react";
-import { Links, LiveReload, Outlet } from "remix";
+import { Links, LiveReload, Outlet, useCatch } from "remix";
 import type { LinksFunction } from "remix";
 
 import globalStylesUrl from "./styles/global.css";
@@ -53,6 +53,21 @@ const App = () => {
   return (
     <Document>
       <Outlet />
+    </Document>
+  );
+}
+
+export const CatchBoundary = () => {
+  let caught = useCatch();
+  return (
+    <Document
+      title={`${caught.status} ${caught.statusText}`}
+    >
+      <div className="error-container">
+        <h1>
+          {caught.statusText} {caught.status}
+        </h1>
+      </div>
     </Document>
   );
 }
