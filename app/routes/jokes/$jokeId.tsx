@@ -3,6 +3,7 @@ import { Link, useLoaderData, useParams, useCatch, redirect } from "remix";
 import type { Joke } from "@prisma/client";
 import { db } from "~/utils/db.server"
 import { getUserId, requiredUserId } from "~/utils/session.server";
+import { JokeDisplay } from "~/components/JokeDisplay";
 
 type LoaderData = {
   joke: Joke;
@@ -99,23 +100,7 @@ export const CatchBoundary = () => {
 const JokeRoute = () => {
   const data = useLoaderData<LoaderData>();
   return (
-    <div>
-      <p>Here's your hilarious joke:</p>
-      <p>{data.joke.content}</p>
-      <Link to=".">{data.joke.name} Permalink</Link>
-      {data.isOwner && (
-        <form method="post">
-          <input
-            type="hidden"
-            name="_method"
-            value="delete"
-          />
-          <button type="submit" className="button">
-            Delete
-          </button>
-        </form>
-      )}
-    </div>
+    <JokeDisplay joke={data.joke} isOwner={data.isOwner} canDelete={data.isOwner} />
   );
 }
 

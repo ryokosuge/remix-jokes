@@ -1,7 +1,8 @@
 import type { ActionFunction, LinksFunction, MetaFunction } from "remix";
 import {
-  useActionData,
+  Form,
   Link,
+  useActionData,
   useSearchParams
 } from "remix";
 import { db } from "~/utils/db.server";
@@ -52,7 +53,7 @@ export const action: ActionFunction = async ({
   const loginType = form.get("loginType");
   const username = form.get("username");
   const password = form.get("password");
-  const redirectTo = form.get("redirectTo");
+  const redirectTo = form.get("redirectTo") || "/jokes";
   if (
     typeof loginType !== "string" ||
     typeof username !== "string" ||
@@ -115,7 +116,7 @@ const LoginRoute = () => {
     <div className="container">
       <div className="content" data-light="">
         <h1>Login</h1>
-        <form
+        <Form
           method="post"
           aria-describedby={
             actionData?.formError
@@ -226,7 +227,7 @@ const LoginRoute = () => {
           <button type="submit" className="button">
             Submit
           </button>
-        </form>
+        </Form>
       </div>
       <div className="links">
         <ul>

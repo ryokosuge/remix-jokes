@@ -1,7 +1,8 @@
-import { ActionFunction, Link, LoaderFunction, useCatch } from "remix";
+import { ActionFunction, Form, Link, LoaderFunction, useCatch, useTransition } from "remix";
 import { useActionData, redirect } from "remix";
 import { db } from "~/utils/db.server";
 import { getUserId, requiredUserId } from "~/utils/session.server";
+import { JokeDisplay } from "~/components/JokeDisplay";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userID = await getUserId(request);
@@ -70,10 +71,28 @@ export const action: ActionFunction = async ({ request }): Promise<Response | Ac
 
 const NewJokesRoute = () => {
   const actionData = useActionData<ActionData | undefined>();
+  const transition = useTransition();
+
+  if (transition.submission) {
+    const name = transition.submission.formData.get("name");
+    const content = transition.submission.formData.get("content");
+
+    if (
+      typeof name === "string" &&
+      typeof content === "string" &&
+      !validateJokeName(name) &&
+      !validateJokeContent(content)
+    ) {
+      return (
+        <JokeDisplay joke={{ name, content }} isOwner={true} canDelete={false} />
+      )
+    }
+  }
+
   return (
     <div>
       <p>Add your own hilarious joke</p>
-      <form method="post">
+      <Form method="post">
         <div>
           <label>
             Name: {" "}
@@ -120,7 +139,7 @@ const NewJokesRoute = () => {
             Add
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }
@@ -131,10 +150,11 @@ export const CatchBoundary = () => {
   const caught = useCatch();
 
   if (caught.status === 401) {
+    const searchParams = new URLSearchParams([["redirectTo", "/jokes/new"]])
     return (
       <div className="error-container">
         <p>You must be logged in to create a joke.</p>
-        <Link to="/login">Login</Link>
+        <Link to={`/login?${searchParams}`}>Login</Link>
       </div>
     );
   }
