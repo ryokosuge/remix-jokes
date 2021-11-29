@@ -1,4 +1,4 @@
-import type { ActionFunction, LinksFunction } from "remix";
+import type { ActionFunction, LinksFunction, MetaFunction } from "remix";
 import {
   useActionData,
   Link,
@@ -10,6 +10,14 @@ import stylesUrl from "../styles/login.css";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
+};
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "Remix Jokes | Login",
+    description:
+      "Login to submit your own jokes to Remix Jokes!"
+  };
 };
 
 const validateUsername = (username: unknown) => {

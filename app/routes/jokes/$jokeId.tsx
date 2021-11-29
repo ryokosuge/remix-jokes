@@ -1,4 +1,4 @@
-import { LoaderFunction, ActionFunction } from "remix";
+import { LoaderFunction, ActionFunction, MetaFunction } from "remix";
 import { Link, useLoaderData, useParams, useCatch, redirect } from "remix";
 import type { Joke } from "@prisma/client";
 import { db } from "~/utils/db.server"
@@ -49,6 +49,20 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   await db.joke.delete({ where: { id: jokeId } });
   return redirect("/jokes");
+}
+
+export const meta: MetaFunction = ({ data }: { data?: LoaderData }) => {
+  if (data == null) {
+    return {
+      title: "No joke",
+      description: "No joke found"
+    };
+  }
+
+  return {
+    title: `"${data.joke.name}" joke`,
+    description: `Enjoy the "${data.joke.name}" joke and much more`
+  };
 }
 
 export const ErrorBoundary = () => {
