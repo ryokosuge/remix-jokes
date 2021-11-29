@@ -14,6 +14,14 @@ export const loader: LoaderFunction = async () => {
   return { randomJoke };
 }
 
+export const ErrorBoundary = () => {
+  return (
+    <div className="error-container">
+      I did a whoopsies.
+    </div>
+  );
+}
+
 const JokesIndexRoute = () => {
   const data = useLoaderData<LoaderData>();
   return (

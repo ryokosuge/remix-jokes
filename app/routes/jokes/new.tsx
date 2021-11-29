@@ -60,6 +60,14 @@ export const action: ActionFunction = async ({ request }): Promise<Response | Ac
   return redirect(`/jokes/${joke.id}`);
 }
 
+export const ErrorBoundary = () => {
+  return (
+    <div className="error-container">
+      I did a whoopsies.
+    </div>
+  )
+}
+
 const NewJokesRoute = () => {
   const actionData = useActionData<ActionData | undefined>();
   return (
