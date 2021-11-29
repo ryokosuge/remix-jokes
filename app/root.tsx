@@ -1,5 +1,5 @@
 import React from "react";
-import { Links, LiveReload, Meta, Outlet, useCatch } from "remix";
+import { Links, LiveReload, Meta, Outlet, useCatch, Scripts } from "remix";
 import type { LinksFunction, MetaFunction } from "remix";
 
 import globalStylesUrl from "./styles/global.css";
@@ -56,6 +56,7 @@ const Document = ({
       </head>
       <body>
         {children}
+        <Scripts />
         {process.env.NODE_ENV === "development" ? (
           <LiveReload />
         ) : null}
